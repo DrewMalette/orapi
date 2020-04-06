@@ -95,3 +95,21 @@ def render(mob, surface, x_offset=0, y_offset=0):
 	x = (mob.x + mob.off_x) + x_offset
 	y = (mob.y + mob.off_y) + y_offset
 	surface.blit(mob.cells[mob.animations[mob.facing][mob.frame]], (x,y))
+	
+def load_sprite(filename):
+
+	image = pygame.image.load(filename)
+	image.convert()
+	image.set_colorkey((0xff,0x00,0xff), pygame.RLEACCEL)
+	cell_w, cell_h = image.get_at((0, image.get_height()-1))[:2]
+	rect = pygame.Rect((0,0)+image.get_at((1, image.get_height()-1))[:2])
+	offsets = image.get_at((2, image.get_height()-1))[:2]
+	cols = int(image.get_width() / cell_w)
+	rows = int(image.get_height() / cell_h)
+
+	cells = {}
+	for row in range(rows):
+		for col in range(cols):
+			cells[row*cols+col] = image.subsurface((col*cell_w, row*cell_h, cell_w, cell_h))
+
+	return { "cols": cols, "rows": rows, "cells": cells, "rect": rect, "offsets": offsets }
