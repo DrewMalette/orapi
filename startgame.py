@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
 
-# a git test
-
-# I'm the DJ Khaled of commits "Another one"
-
-# Yup. Another one
-
-# Because, why the hell not?
-
 import pygame
 
 import orapi
