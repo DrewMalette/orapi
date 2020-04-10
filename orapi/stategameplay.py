@@ -2,6 +2,12 @@ import pygame
 
 from .mob import *
 
+class State_Create_Character:
+
+	def __init__(self, game):
+	
+		self.game = game
+
 class State_Gameplay:
 
 	def __init__(self, game):
