@@ -58,6 +58,14 @@ class Mob(pygame.Rect):
 		#self.attacking = False
 		#self.atkstart = 0
 		
+	def spawn(self):
+	
+		self.scene.live_mobs[self.name] = self
+	
+	def kill(self):
+	
+		del self.scene.live_mobs[self.name]
+		
 def place(mob, col, row):
 	
 	mob.x = col * mob.scene.tilesize + (mob.scene.tilesize - mob.w) / 2

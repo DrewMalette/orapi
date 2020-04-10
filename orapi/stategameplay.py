@@ -49,6 +49,7 @@ class State_Gameplay:
 		c = self.game.controller
 		if c.x_axis or c.y_axis: move_mob(self.game.player, c.x_axis, c.y_axis)
 		base_update(self.game.player)
+		self.scene.update()
 		render(self.game.player, self.game.display)
 		pygame.display.flip()
 		

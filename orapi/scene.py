@@ -19,3 +19,11 @@ class Scene:
 		self.furniture = {}
 		self.loot = {}
 
+	def add_mob(self, mob):
+	
+		self.mobs[mob.name] = mob
+		
+	def update(self):
+	
+		for mob in self.live_mobs.values():
+			mob.update()
