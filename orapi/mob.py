@@ -17,7 +17,12 @@ get_centre = lambda mob: ((mob.x + (mob.w / 2)), (mob.y + (mob.h / 2)))
 
 class Mob(pygame.Rect):
 
-	def __init__(self, filename, name):
+	pattern = [0,1,0,2]
+	facings = { "south": 0, "north": 1, "east": 2, "west": 3 }
+
+	def __init__(self, game, filename, name):
+	
+		self.game = game
 	
 		#self.data = utilities.load_sprite(filename)
 		#self.name = name # within Scene.mobs, the uid is a number
@@ -26,7 +31,14 @@ class Mob(pygame.Rect):
 		#self.animations = self.data["animations"]
 		#self.off_x = self.data["off_x"]
 		#self.off_y = self.data["off_y"]
-		
+		data = load_sprite(filename)
+		pygame.Rect.__init__(self, data["rect"])
+		self.cols = data["cols"]
+		self.rows = data["rows"]
+		self.cells = data["cells"]
+		self.x_offset, self.y_offset = data["offsets"]
+		#	return { "cols": cols, "rows": rows, "cells": cells, "rect": rect, "offsets": offsets }
+				
 		self.moving = False
 		self.facing = "south"
 		self.frame = 0
@@ -53,7 +65,7 @@ def place(mob, col, row):
 
 def collision(mob, x_axis, y_axis):
 
-	for c in range(4):
+	'''for c in range(4):
 		xm = ((mob.x + x_axis * mob.speed) + (c % 2) * mob.w)
 		ym = ((mob.y + y_axis * mob.speed) + int(c / 2) * mob.h)
 
@@ -68,23 +80,23 @@ def collision(mob, x_axis, y_axis):
 			xm = mob.speed * x_axis + mob.x
 			ym = mob.speed * y_axis + mob.y
 			if sprite.colliderect((xm, ym, mob.w, mob.h)):
-				return True
+				return True'''
 	return False
 	
 def move_mob(mob, x_axis, y_axis):
 
-	mob.moving = (x_axis != 0 or y_axis != 0)	
-	x = (not mob.collision(x_axis * mob.speed, 0)) * (x_axis * mob.speed)
-	y = (not mob.collision(0, y_axis * mob.speed)) * (y_axis * mob.speed)
+	print(mob.moving)	
+	x = (not collision(mob, x_axis * mob.speed, 0)) * (x_axis * mob.speed)
+	y = (not collision(mob, 0, y_axis * mob.speed)) * (y_axis * mob.speed)
 	mob.move_ip(x*mob.moving, y*mob.moving)
 	mob.facing = heading[(x_axis,y_axis)]
 		
 def base_update(mob):
 
 	# mob.statblock.upkeep()
-	
-	mob.frame += mob.moving & (mob.scene.engine.tick % 12 == 0) * 1
-	mob.frame = mob.frame % len(mob.animations["south"]) * mob.moving
+	mob.moving = bool(mob.game.controller.x_axis or mob.game.controller.y_axis)	
+	mob.frame += mob.moving & (mob.game.tick % 12 == 0) * 1
+	mob.frame = mob.frame % len(mob.pattern) * mob.moving
 	
 def update(mob): # overridden by classes derived
 
@@ -92,9 +104,20 @@ def update(mob): # overridden by classes derived
 	
 def render(mob, surface, x_offset=0, y_offset=0):
 
-	x = (mob.x + mob.off_x) + x_offset
-	y = (mob.y + mob.off_y) + y_offset
-	surface.blit(mob.cells[mob.animations[mob.facing][mob.frame]], (x,y))
+	x = (mob.x - mob.x_offset) + x_offset
+	y = (mob.y - mob.y_offset) + y_offset
+	frame = mob.pattern[mob.frame]
+	facing = mob.facings[mob.facing]
+	surface.blit(get_cell(mob, frame, facing), (x,y))
+
+def get_cell(mob, col, row):
+
+	if (col >= 0 and col < mob.cols) and (row >= 0 and row < mob.rows):
+		return mob.cells[mob.cols*row+col]
+	else:
+		print("requested column or row does not match the sprite's dimensions")
+		pygame.quit()
+		exit()
 	
 def load_sprite(filename):
 

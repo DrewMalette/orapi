@@ -1,7 +1,5 @@
 import pygame
 
-from .stategameplay import *
-
 class Game:
 
 	fps = 60
@@ -14,7 +12,7 @@ class Game:
 		self.display = pygame.display.set_mode(self.display_size)
 	
 		self.controller = Keyboard(self)
-		self.state = State_Gameplay(self)
+		self.state = None
 		self.states = {}
 		
 		self.ui = None
@@ -63,10 +61,7 @@ class Controller:
 	
 		self.game = game
 		
-		self.up = 0
-		self.down = 0
-		self.left = 0
-		self.right = 0
+		self.x_axis = self.y_axis = 0
 		
 		self.exit = 0
 
@@ -78,12 +73,7 @@ class Keyboard(Controller):
 	
 	def update(self, keys):
 		
-		self.up = keys[pygame.K_UP]
-		self.down = keys[pygame.K_DOWN]
-		self.left = keys[pygame.K_LEFT]
-		self.right = keys[pygame.K_RIGHT]
-		
-		self.exit = keys[pygame.K_ESCAPE]
-		
-		if self.exit == 1:
-			self.game.running = False
+		self.x_axis = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT] 
+		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP] 
+
+		self.game.running = (not keys[pygame.K_ESCAPE])

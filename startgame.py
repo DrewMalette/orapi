@@ -8,9 +8,10 @@ import orapi
 
 def load_func(game):
 
-	print("Open Rhombus Action RPG engine (MMXX)")
-	print(game.version)
-
+	game.state = orapi.State_Gameplay(game)
+	
+	game.player = orapi.Mob(game, "mob_jon.png", "Jon")
+	
 pygame.init()
 
 game = orapi.Game("0.1", load_func)

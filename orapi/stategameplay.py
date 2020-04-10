@@ -1,3 +1,7 @@
+import pygame
+
+from .mob import *
+
 class State_Gameplay:
 
 	def __init__(self, game):
@@ -42,7 +46,11 @@ class State_Gameplay:
 		#TODO ??? self.input_focus.get_input()
 		
 		#self.scene.update()
-		pass
+		c = self.game.controller
+		if c.x_axis or c.y_axis: move_mob(self.game.player, c.x_axis, c.y_axis)
+		base_update(self.game.player)
+		render(self.game.player, self.game.display)
+		pygame.display.flip()
 		
 	#def in_game(self): # leads to in_menu, in_dialogue, and fade_out
 	
