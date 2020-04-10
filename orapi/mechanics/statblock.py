@@ -23,16 +23,32 @@ class StatBlock:
 		self.exp = 0
 		self.next = 500
 		
-	def hit(self, target):
+	def melee_hit(self, target):
 	
 		roll = dice(20)
 		return roll + self.fortitude + int(self.level / 2) >= target.evade
+	
+	def ranged_hit(self, target):
+	
+		return roll + self.reflex + int(self.level / 2) >= target.evade
 		
 	def level_up(self):
 	
 		self.level += 1
-		self.max_hp += int(self.body / 2) + dice(4)
+		
+		# can you take a stat boost?
+		if self.level % 3 == 0:
+			print("Which stat would you like to boost?")
+		if self.level % 4 == 0:
+			print("Which new special skill would you like?")
+				
+		self.fortitude = int((self.body+self.spirit) / 2)
+		self.reflex = int((self.mind+self.body) / 2)
+		self.will = int((self.spirit+self.mind) / 2)
+		
+		self.max_hp += int(self.fortitude / 2) + dice(4) # body
 		self.cur_hp = self.max_hp
+		self.evade = 10 + self.reflex + int(self.level / 3)
 		
 		self.exp = 0
 		self.next = self.level * 500
