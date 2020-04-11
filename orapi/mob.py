@@ -93,11 +93,10 @@ def collision(mob, x_axis, y_axis):
 	
 def move_mob(mob, x_axis, y_axis):
 
-	print(mob.moving)	
 	x = (not collision(mob, x_axis * mob.speed, 0)) * (x_axis * mob.speed)
 	y = (not collision(mob, 0, y_axis * mob.speed)) * (y_axis * mob.speed)
 	mob.move_ip(x*mob.moving, y*mob.moving)
-	mob.facing = heading[(x_axis,y_axis)]
+	if x_axis != 0 or y_axis != 0: mob.facing = heading[(x_axis,y_axis)]
 		
 def base_update(mob):
 

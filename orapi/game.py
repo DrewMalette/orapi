@@ -64,6 +64,9 @@ class Controller:
 		self.game = game
 		
 		self.x_axis = self.y_axis = 0
+		self.x_repeat = self.y_repeat = False
+		self.x_pressed = self.y_pressed = False
+		self.x_tick = self.y_tick = 0
 		
 		self.exit = 0
 
@@ -72,26 +75,26 @@ class Keyboard(Controller):
 	def __init__(self, game):
 	
 		Controller.__init__(self, game)
-		
-		self.x_pressed = self.y_pressed = False
-		self.t = 0
-	
+			
 	def update(self, keys):
 		
 		self.x_axis = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT] 
 		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP]
 		
-		# realistically it won't be used this way. this is more for dialogues
 		if self.x_axis != 0 and not self.x_pressed:
-			self.t = pygame.time.get_ticks()
+			self.x_tick = pygame.time.get_ticks()
 			self.x_pressed = True
-			move_mob(self.game.player, 1, 0)
-		
 		elif self.x_axis == 0 and self.x_pressed:
 			self.x_pressed = False
-			
-		if self.x_pressed:
-			if pygame.time.get_ticks() - self.t >= 800:
-				move_mob(self.game.player, self.x_axis, 0)
+		self.x_repeat = self.x_pressed and (pygame.time.get_ticks() - self.x_tick >= 800)
+
+		if self.y_axis != 0 and not self.y_pressed:
+			self.y_tick = pygame.time.get_ticks()
+			self.y_pressed = True
+		elif self.y_axis == 0 and self.y_pressed:
+			self.y_pressed = False
+		self.y_repeat = self.y_pressed and (pygame.time.get_ticks() - self.y_tick >= 800)
+
+		print(self.x_repeat, self.y_repeat)
 
 		self.game.running = (not keys[pygame.K_ESCAPE])
