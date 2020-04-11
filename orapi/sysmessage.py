@@ -16,8 +16,9 @@ class Sys_Message:
 		
 	def update(self):
 	
+		# this would be better done with counting ticks in the main Game class
 		self.fading = (pygame.time.get_ticks() - self.tick) >= 3000
-		self.alpha -= 1 * self.fading
+		self.alpha -= 8 * self.fading * ((pygame.time.get_ticks() - self.tick) % 2 == 0)
 		print(self.alpha)
 		if self.alpha <= 0:
 			self.alpha = 0
@@ -30,9 +31,13 @@ if __name__ == "__main__":
 	
 	display = pygame.display.set_mode((640,480))
 	
+	clock = pygame.time.Clock()
+	
 	msg = Sys_Message("Message 1") #, 0, (0xff,0xff,0xff))
 	
 	while not msg.done:
+	
+		clock.tick(60)
 	
 		msg.update()
 	
