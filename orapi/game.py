@@ -1,5 +1,7 @@
 import pygame
 
+from .mob import move_mob
+
 class Game:
 
 	fps = 60
@@ -70,10 +72,26 @@ class Keyboard(Controller):
 	def __init__(self, game):
 	
 		Controller.__init__(self, game)
+		
+		self.x_pressed = self.y_pressed = False
+		self.t = 0
 	
 	def update(self, keys):
 		
 		self.x_axis = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT] 
-		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP] 
+		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP]
+		
+		# realistically it won't be used this way. this is more for dialogues
+		if self.x_axis != 0 and not self.x_pressed:
+			self.t = pygame.time.get_ticks()
+			self.x_pressed = True
+			move_mob(self.game.player, 1, 0)
+		
+		elif self.x_axis == 0 and self.x_pressed:
+			self.x_pressed = False
+			
+		if self.x_pressed:
+			if pygame.time.get_ticks() - self.t >= 800:
+				move_mob(self.game.player, self.x_axis, 0)
 
 		self.game.running = (not keys[pygame.K_ESCAPE])
