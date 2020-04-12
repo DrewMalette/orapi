@@ -1,6 +1,7 @@
 
 import pygame
 from .mechanics import StatBlock
+from .utilities import load_mob_sprite
 
 heading = { (0,-1): "north", (0,1): "south", (-1,0): "west", (1,0): "east",
 			(-1,-1): "north", (1,1): "south", (-1,1): "west", (1,-1): "east" }
@@ -31,7 +32,7 @@ class Mob(pygame.Rect): # incarnation of the 'Sprite' concept
 		#self.animations = self.data["animations"]
 		#self.off_x = self.data["off_x"]
 		#self.off_y = self.data["off_y"]
-		data = load_sprite(filename)
+		data = load_mob_sprite(filename)
 		pygame.Rect.__init__(self, data["rect"])
 		self.cols = data["cols"]
 		self.rows = data["rows"]
@@ -125,21 +126,3 @@ def get_cell(mob, col, row):
 		print("requested column or row does not match the mob's sprite dimensions")
 		pygame.quit()
 		exit()
-	
-def load_sprite(filename):
-
-	image = pygame.image.load(filename)
-	image.convert()
-	image.set_colorkey((0xff,0x00,0xff), pygame.RLEACCEL)
-	cell_w, cell_h = image.get_at((0, image.get_height()-1))[:2]
-	rect = pygame.Rect((0,0)+image.get_at((1, image.get_height()-1))[:2])
-	offsets = image.get_at((2, image.get_height()-1))[:2]
-	cols = int(image.get_width() / cell_w)
-	rows = int(image.get_height() / cell_h)
-
-	cells = {}
-	for row in range(rows):
-		for col in range(cols):
-			cells[row*cols+col] = image.subsurface((col*cell_w, row*cell_h, cell_w, cell_h))
-
-	return { "cols": cols, "rows": rows, "cells": cells, "rect": rect, "offsets": offsets }
