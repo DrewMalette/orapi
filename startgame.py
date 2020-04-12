@@ -6,10 +6,9 @@ import orapi
 
 def load_func(game):
 
-	scene1 = orapi.Scene("scene1", game)
-	game.state = orapi.State_Gameplay(game)
-	game.state.scene = scene1	
 	game.player = orapi.Mob(game, "mob_jon.png", "Jon")
+	game.load_scene("scene1", "untitled.tmx")
+	game.state = orapi.State_Gameplay(game)
 	
 pygame.init()
 

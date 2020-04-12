@@ -14,8 +14,6 @@ east_rect = lambda mob: (mob.x + mob.w, mob.y)
 talk_rect = { "north": north_rect, "south": south_rect, "west": west_rect, "east": east_rect }
 # mob.talk_rect.x, mob.talk_rect.y = talk_rect[mob.facing](mob)
 
-get_centre = lambda mob: ((mob.x + (mob.w / 2)), (mob.y + (mob.h / 2)))
-
 class Mob(pygame.Rect): # incarnation of the 'Sprite' concept
 
 	pattern = [0,1,0,2]
@@ -74,28 +72,33 @@ def place(mob, col, row):
 
 def collision(mob, x_axis, y_axis):
 
-	'''for c in range(4):
+	for c in range(4):
 		xm = ((mob.x + x_axis * mob.speed) + (c % 2) * mob.w)
 		ym = ((mob.y + y_axis * mob.speed) + int(c / 2) * mob.h)
 
-		col = int(xm / mob.scene.tilesize) # is this slow?
-		row = int(ym / mob.scene.tilesize)
+		col = int(xm / mob.scene.terrain.tilesize) # is this slow?
+		row = int(ym / mob.scene.terrain.tilesize)
 
-		if mob.scene.get_tile("collide", col, row) != "0":
+		if mob.scene.terrain.get_tile("collide", col, row) != "0":
 			return True
+			print("true tile")
 
-	for sprite in mob.scene.sprites.values():
+	for sprite in mob.scene.live_mobs.values():
 		if sprite is not mob:
 			xm = mob.speed * x_axis + mob.x
 			ym = mob.speed * y_axis + mob.y
 			if sprite.colliderect((xm, ym, mob.w, mob.h)):
-				return True'''
+				return True
+				print("true mob")
+	#print("false")
 	return False
+	
 	
 def move_mob(mob, x_axis, y_axis):
 
 	x = (not collision(mob, x_axis * mob.speed, 0)) * (x_axis * mob.speed)
 	y = (not collision(mob, 0, y_axis * mob.speed)) * (y_axis * mob.speed)
+	print(x,y)
 	mob.move_ip(x*mob.moving, y*mob.moving)
 	if x_axis != 0 or y_axis != 0: mob.facing = heading[(x_axis,y_axis)]
 		

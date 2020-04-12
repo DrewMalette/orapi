@@ -4,6 +4,8 @@
 #  with boolean multiplication (where possible)
 # tl;dr i'm replacing conditionals with boolean based calculations
 
+from .mob import base_update
+
 class Scene:
 
 	def __init__(self, uid, game, terrain=None):
@@ -26,4 +28,4 @@ class Scene:
 	def update(self):
 	
 		for mob in self.live_mobs.values():
-			mob.update()
+			base_update(mob)

@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 
 import pygame
 
-from . import sprite
+from .mob import Mob
 from . import utilities
 
 class Tileset:
@@ -16,7 +16,7 @@ class Tileset:
 		
 	def update(self, filename, firstgid=1):
 	
-		textures = load_tileset(filename, self.width, self.height, firstgid)
+		textures = utilities.load_tileset(filename, self.width, self.height, firstgid)
 		self.textures.update(textures)
 				
 	def __getitem__(self, key=-1):
@@ -26,15 +26,13 @@ class Tileset:
 		if key is not -1:
 			return self.textures[key]
 			
-class Terrain(object):
+class Terrain:
 
-	def __init__(self, filename, engine, scene):
+	def __init__(self, filename, engine):
 
 		self.uid = filename
-		self.engine = engine
-		#self.renderer = self.engine.scene_painter
-		self.scene = scene
-
+		self.scene = engine.scene
+		
 		tree = ET.parse(self.uid)
 		root = tree.getroot()
 		
@@ -57,15 +55,14 @@ class Terrain(object):
 						 }
 
 		self.switches = {}
-		self.sprites = {}
 		
 		for tilesettag in root.iter("tileset"):
 			filename = tilesettag.attrib["source"]
-			tilestree = ET.parse("content/image/" + filename)
+			tilestree = ET.parse(filename)
 			tilesroot = tilestree.getroot()
 			for tileset in tilesroot.iter("tileset"):
 				for i in tileset.iter("image"):
-					filename = "content/image/" + i.attrib["source"]
+					filename = i.attrib["source"]
 					firstgid = tilesettag.attrib["firstgid"]
 					self.tileset.update(filename, firstgid) # ummmmmmm....?
 					
@@ -93,14 +90,14 @@ class Terrain(object):
 				col = int(float(rectattribs["x"]) / self.tilewidth)
 				row = int(float(rectattribs["y"]) / self.tileheight)
 				if rectattribs["type"] == "player":
-					if self.engine.player_character is None: # move this to engine
+					if engine.player is None: # move this to engine
 						print("player object is not defined")
 						print("exiting")
 						pygame.quit()
 						exit()
-					self.sprites["player"] = self.engine.player_character
-					self.sprites["player"].scene = self
-					self.sprites["player"].place(col,row)
+					self.scene.live_mobs["player"] = engine.player
+					self.scene.live_mobs["player"].scene = self.scene
+					utilities.place(self.scene.live_mobs["player"], col, row, self)
 				elif rectattribs["type"] == "switch":
 					x = int(float(rectattribs["x"]) / self.tilewidth) * self.tilewidth
 					y = int(float(rectattribs["y"]) / self.tileheight) * self.tileheight
@@ -113,15 +110,16 @@ class Terrain(object):
 						#print("defaulting to map defined placement position")
 						self.switches[uid] = [pygame.Rect((x,y,self.tilewidth,self.tileheight)), rectattribs["Filename"], None, facing]
 				elif rectattribs["type"] == "mob":
-					self.sprites[uid] = sprite.Mob("content/image/" + rectattribs["Filename"], rectattribs["name"])
-					self.sprites[uid].scene = self
-					self.sprites[uid].place(col,row)
-				elif rectattribs["type"] == "static":
-					filepath = "content/image/" + rectattribs["Filename"]
-					name = rectattribs["name"]
-					self.sprites[uid] = sprite.Static(filepath, name)
-					self.sprites[uid].scene = self
-					self.sprites[uid].place(col,row)
+					self.scene.live_mobs[uid] = Mob("content/image/" + rectattribs["Filename"], rectattribs["name"])
+					self.scene.live_mobs[uid].scene = self.scene
+					utilities.place(self.scene.live_mobs[uid], col, row, self)
+				#elif rectattribs["type"] == "static":
+				#	filepath = "content/image/" + rectattribs["Filename"]
+				#	name = rectattribs["name"]
+				#	self.sprites[uid] = sprite.Static(filepath, name)
+				#	self.sprites[uid].scene = self
+				#	self.sprites[uid].place(col,row)
+		self.scene.terrain = self
 
 	def get_tile(self, layername, col, row):
 	
@@ -136,17 +134,17 @@ class Terrain(object):
 		self.loot[self.loot_count] = sprite.Loot(self, uid, filename, (px,py))
 		self.loot_count = (self.loot_count + 1) % 256
 		
-	def update(self):
-	
-		for sprite in self.sprites.values():
-			sprite.update()
-			
-		for loot in self.loot.values():
-			loot.update()
-		
-		# TODO put this in player
-		for switch in self.switches.values():
-			rect = switch[0]
-			filename = switch[1]
-			if self.engine.player_character.colliderect(rect):
-				self.engine.active_state.switch_scene("content/image/"+filename, switch[2], switch[3])
+	#def update(self):
+	#
+	#	for sprite in self.sprites.values():
+	#		sprite.update()
+	#		
+	#	for loot in self.loot.values():
+	#		loot.update()
+	#	
+	#	# TODO put this in player
+	#	for switch in self.switches.values():
+	#		rect = switch[0]
+	#		filename = switch[1]
+	#		if self.engine.player_character.colliderect(rect):
+	#			self.engine.active_state.switch_scene("content/image/"+filename, switch[2], switch[3])

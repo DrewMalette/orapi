@@ -23,8 +23,6 @@ class State_Gameplay:
 							"in_dialogue": self.in_dialogue,
 							"switching": self.switching }
 		
-		self.scene = None # Scene
-		
 		self.input_focus = None # self.game.player
 	
 	def fade_in(self): pass
@@ -54,9 +52,11 @@ class State_Gameplay:
 		#self.scene.update()
 		c = self.game.controller
 		move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
-		base_update(self.game.player)
-		self.scene.update()
-		render(self.game.player, self.game.display)
+		#base_update(self.game.player)
+		self.game.scene.update()
+		self.game.terrain_renderer.update()
+		self.game.terrain_renderer.render()
+		#render(self.game.player, self.game.display)
 		pygame.display.flip()
 		
 	#def in_game(self): # leads to in_menu, in_dialogue, and fade_out
