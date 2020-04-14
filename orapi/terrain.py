@@ -32,6 +32,7 @@ class Terrain:
 
 		self.uid = filename
 		self.scene = engine.scene
+		self.scene.terrain = self
 		
 		tree = ET.parse(self.uid)
 		root = tree.getroot()
@@ -119,7 +120,6 @@ class Terrain:
 				#	self.sprites[uid] = sprite.Static(filepath, name)
 				#	self.sprites[uid].scene = self
 				#	self.sprites[uid].place(col,row)
-		self.scene.terrain = self
 
 	def get_tile(self, layername, col, row):
 	

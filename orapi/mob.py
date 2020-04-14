@@ -81,7 +81,6 @@ def collision(mob, x_axis, y_axis):
 
 		if mob.scene.terrain.get_tile("collide", col, row) != "0":
 			return True
-			print("true tile")
 
 	for sprite in mob.scene.live_mobs.values():
 		if sprite is not mob:
@@ -89,8 +88,6 @@ def collision(mob, x_axis, y_axis):
 			ym = mob.speed * y_axis + mob.y
 			if sprite.colliderect((xm, ym, mob.w, mob.h)):
 				return True
-				print("true mob")
-	#print("false")
 	return False
 	
 	
@@ -98,7 +95,6 @@ def move_mob(mob, x_axis, y_axis):
 
 	x = (not collision(mob, x_axis * mob.speed, 0)) * (x_axis * mob.speed)
 	y = (not collision(mob, 0, y_axis * mob.speed)) * (y_axis * mob.speed)
-	print(x,y)
 	mob.move_ip(x*mob.moving, y*mob.moving)
 	if x_axis != 0 or y_axis != 0: mob.facing = heading[(x_axis,y_axis)]
 		
