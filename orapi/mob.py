@@ -98,7 +98,6 @@ def move_mob(mob, x_axis, y_axis):
 
 	x = (not collision(mob, x_axis * mob.speed, 0)) * (x_axis * mob.speed)
 	y = (not collision(mob, 0, y_axis * mob.speed)) * (y_axis * mob.speed)
-	print(x,y)
 	mob.move_ip(x*mob.moving, y*mob.moving)
 	if x_axis != 0 or y_axis != 0: mob.facing = heading[(x_axis,y_axis)]
 		
