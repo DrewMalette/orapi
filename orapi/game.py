@@ -48,6 +48,7 @@ class Game:
 		self.terrain_renderer.following = self.player
 
 		# assumes the tile is square
+		print("sup", self.scene.terrain.uid)
 		self.terrain_renderer.tilesize = self.scene.terrain.tilewidth
 		self.terrain_renderer.cols = int(self.terrain_renderer.w / self.scene.terrain.tilesize + 2)
 		self.terrain_renderer.rows = int(self.terrain_renderer.h / self.scene.terrain.tilesize + 2)
