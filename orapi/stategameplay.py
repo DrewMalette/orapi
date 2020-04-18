@@ -52,10 +52,15 @@ class State_Gameplay:
 		#self.scene.update()
 		c = self.game.controller
 		move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
-		#base_update(self.game.player)
+		if not self.game.dialogue_box.visible and c.as_button == 1:
+			self.game.dialogue_box.text_list = ["Guten tag"]
+			self.game.dialogue_box.start()
+		self.game.dialogue_box.update()
 		self.game.scene.update()
 		self.game.terrain_renderer.update()
+		
 		self.game.terrain_renderer.render()
+		self.game.dialogue_box.render()
 		#render(self.game.player, self.game.display)
 		pygame.display.flip()
 		

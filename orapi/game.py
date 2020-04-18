@@ -3,6 +3,7 @@ import pygame
 from .mob import move_mob, render
 from .scene import Scene
 from .terrain import Terrain
+from .dialogue import UI_Dialogue
 from . import utilities
 from .utilities import get_centre
 
@@ -17,18 +18,21 @@ class Game:
 	
 		self.display = pygame.display.set_mode(self.display_size)
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
+		self.dialogue_box = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
 	
 		self.controller = Keyboard(self)
 		self.state = None
 		self.states = {}
 		
-		self.ui = None
+		#self.ui = None
 		
 		self.clock = pygame.time.Clock()
 		self.tick = 0
 		
 		self.player = None
 		self.scene = None
+		
+		self.ui_font = pygame.font.Font(None, 24)
 				
 		# do some loading shit here
 		load_func(self)
@@ -48,7 +52,6 @@ class Game:
 		self.terrain_renderer.following = self.player
 
 		# assumes the tile is square
-		print("sup", self.scene.terrain.uid)
 		self.terrain_renderer.tilesize = self.scene.terrain.tilewidth
 		self.terrain_renderer.cols = int(self.terrain_renderer.w / self.scene.terrain.tilesize + 2)
 		self.terrain_renderer.rows = int(self.terrain_renderer.h / self.scene.terrain.tilesize + 2)
@@ -98,7 +101,15 @@ class Controller:
 		self.x_pressed = self.y_pressed = False
 		self.x_tick = self.y_tick = 0
 		
+		self.as_pressed = False
+		self.as_button = 0 # 'A' button single pulse
+		self.ar_button = 0 # 'A' button repeating pulse
+		
 		self.exit = 0
+		
+	def flush(self):
+	
+		self.as_button = 0
 
 class Keyboard(Controller):
 
@@ -110,6 +121,9 @@ class Keyboard(Controller):
 		
 		self.x_axis = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT] 
 		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP]
+		
+		self.as_button = 0
+		self.ar_button = keys[pygame.K_RCTRL]
 		
 		if self.x_axis != 0 and not self.x_pressed:
 			self.x_tick = pygame.time.get_ticks()
@@ -124,6 +138,12 @@ class Keyboard(Controller):
 		elif self.y_axis == 0 and self.y_pressed:
 			self.y_pressed = False
 		self.y_repeat = self.y_pressed and (pygame.time.get_ticks() - self.y_tick >= 800)
+
+		if keys[pygame.K_RCTRL] == 1 and not self.as_pressed:
+			self.as_pressed = True
+			self.as_button = 1
+		elif keys[pygame.K_RCTRL] == 0 and self.as_pressed:
+			self.as_pressed = False
 
 		#print(self.x_repeat, self.y_repeat)
 
