@@ -16,7 +16,7 @@ class Tileset:
 		
 	def update(self, filename, firstgid=1):
 	
-		textures = utilities.load_tileset(filename, self.width, self.height, firstgid)
+		textures = utilities.load_tileset("data/terrain/"+filename, self.width, self.height, firstgid)
 		self.textures.update(textures)
 				
 	def __getitem__(self, key=-1):
@@ -59,7 +59,7 @@ class Terrain:
 		
 		for tilesettag in root.iter("tileset"):
 			filename = tilesettag.attrib["source"]
-			tilestree = ET.parse(filename)
+			tilestree = ET.parse("data/terrain/"+filename)
 			tilesroot = tilestree.getroot()
 			for tileset in tilesroot.iter("tileset"):
 				for i in tileset.iter("image"):

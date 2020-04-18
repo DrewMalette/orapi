@@ -12,6 +12,8 @@ def place(mob, col, row, terrain):
 
 def load_image(filename, colourkey=None):
 
+	print(filename)
+
 	try:
 		image = pygame.image.load(filename)
 	except:
