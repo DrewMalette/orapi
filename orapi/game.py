@@ -7,6 +7,9 @@ from .dialogue import UI_Dialogue
 from . import utilities
 from .utilities import get_centre
 
+from .statetitlecard import State_Titlecard
+from .stategameplay import State_Gameplay
+
 class Game:
 
 	fps = 60
@@ -22,8 +25,8 @@ class Game:
 		self.dialogue_box = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
 	
 		self.controller = Keyboard(self)
-		self.state = None
-		self.states = {}
+		self.state = ""
+		self.states = { "titlecard": State_Titlecard(self), "gameplay": State_Gameplay(self) }
 		
 		#self.ui = None
 		
@@ -40,14 +43,14 @@ class Game:
 
 	def switch_state(self, state_uid): # load and start
 	
-		self.state = self.states[state_uid]
-		self.state.start()
+		self.state = state_uid
+		self.states[self.state].start()
 
 	def load_scene(self, uid, filename): # scene?
 	
 		#if self.scene != None:
 		#	del self.scene
-		self.scene = Scene("scene1", self)
+		self.scene = Scene(uid, self)
 		terrain = Terrain(filename, self)
 		self.terrain_renderer.scene = self.scene
 		self.terrain_renderer.following = self.player
@@ -79,7 +82,7 @@ class Game:
 		self.tick = (self.tick + 1) % 1024
 		pygame.event.pump()
 		self.controller.update(pygame.key.get_pressed())
-		self.state.update()
+		self.states[self.state].update()
 		#self.camera.update()
 		
 	def render(self):
