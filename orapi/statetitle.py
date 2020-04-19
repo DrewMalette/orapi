@@ -50,7 +50,6 @@ class State_Title:
 						self.game.running = False
 						
 		self.render()
-		pygame.display.flip()
 					
 	def render(self):
 	

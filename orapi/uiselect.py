@@ -35,7 +35,6 @@ class UI_Select(object):
 		self._returned = 0
 	
 		if self.visible:
-			print("yup. getting through!")
 			y_axis = self.game.controller.y_pressed
 			button_a = self.game.controller.as_button
 		

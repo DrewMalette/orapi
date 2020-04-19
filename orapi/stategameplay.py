@@ -30,7 +30,6 @@ class State_Gameplay:
 		self.game.fader.update()
 		self.game.terrain_renderer.render()
 		self.game.display.blit(self.game.fader.curtain,(0,0))
-		pygame.display.flip()
 		if self.game.fader.faded_in: self.sub_state = "in_play"
 		
 	def fade_out(self):
@@ -38,8 +37,7 @@ class State_Gameplay:
 		self.game.fader.update()
 		self.game.terrain_renderer.render()
 		self.game.display.blit(self.game.fader.curtain,(0,0))
-		pygame.display.flip()
-		if self.game.fader.faded_out: self.game.running = False
+		if self.game.fader.faded_out: self.game.switch_state("title")
 				
 	def in_menu(self): pass	
 	def iteming(self): pass	
@@ -81,7 +79,6 @@ class State_Gameplay:
 		self.game.display.blit(self.game.fader.curtain,(0,0))
 		self.game.dialogue_box.render()
 		#render(self.game.player, self.game.display)
-		pygame.display.flip()
 		
 	#def in_play(self): # leads to in_menu, in_dialogue, and fade_out
 	

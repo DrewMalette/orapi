@@ -50,5 +50,3 @@ class State_Titlecard:
 				
 		self.game.display.blit(self.image, (0,0))
 		self.game.display.blit(self.game.fader.curtain, (0,0))
-		
-		pygame.display.flip()

@@ -88,7 +88,7 @@ class Game:
 		pygame.event.pump()
 		self.controller.update(pygame.key.get_pressed())
 		self.states[self.state].update()
-		#self.camera.update()
+		pygame.display.flip()
 		
 	def render(self):
 	
@@ -104,12 +104,12 @@ class Controller:
 		
 		self.x_axis = self.y_axis = 0
 		self.x_repeat = self.y_repeat = False
-		self.x_pressed = self.y_pressed = False # USE THESE!!!
+		self.x_pressed = self.y_pressed = False # USE THESE!!! Yes but actually no
 		self.x_tick = self.y_tick = 0
 		
 		self.as_pressed = False
 		self.as_button = 0 # 'A' button single pulse
-		self.ar_button = 0 # 'A' button repeating pulse
+		self.ar_button = 0 # 'A' button repeating pulse; haven't coded this in yet
 		
 		self.exit = 0
 		
