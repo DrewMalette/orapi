@@ -17,6 +17,7 @@ class Game:
 		self.version = version
 	
 		self.display = pygame.display.set_mode(self.display_size)
+		self.fader = Fader(self, self.display.get_size())
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
 		self.dialogue_box = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
 	
@@ -58,7 +59,7 @@ class Game:
 		self.terrain_renderer.blank = pygame.Surface((self.scene.terrain.tilesize,self.scene.terrain.tilesize)).convert()
 		self.terrain_renderer.blank.fill((0,0,0))
 		
-		#self.engine.controller.flush()
+		#self.controller.flush()
 		self.player.moving = False
 		#self.sprites["player"].facing = "south" TODO put this somewhere else (like in a gamestate)
 		self.terrain_renderer.update()		
@@ -67,10 +68,7 @@ class Game:
 	
 		self.running = True
 		
-		while self.running:
-		
-			self.update()
-			#self.render() is this needed? Handling is done in state, methinks
+		while self.running: self.update()
 			
 		pygame.quit()
 		exit()
@@ -145,17 +143,20 @@ class Keyboard(Controller):
 		elif keys[pygame.K_RCTRL] == 0 and self.as_pressed:
 			self.as_pressed = False
 
+		if keys[pygame.K_ESCAPE] == 1:
+			self.exit = 1
+
 		#print(self.x_repeat, self.y_repeat)
 
-		self.game.running = (not keys[pygame.K_ESCAPE])
+		#self.game.running = (not keys[pygame.K_ESCAPE])
 		
 class Terrain_Renderer(pygame.Rect):
 
-	def __init__(self, uid, engine, x=0, y=0):
+	def __init__(self, uid, game, x=0, y=0):
 	
 		self.uid = uid
-		self.engine = engine
-		w,h = self.engine.display.get_size()
+		self.game = game
+		w,h = self.game.display.get_size()
 		pygame.Rect.__init__(self, (x,y,w,h))
 		
 		self.tilesize = 0 # TODO where does this get set?
@@ -190,6 +191,7 @@ class Terrain_Renderer(pygame.Rect):
 	
 		x,y = get_centre(self.following)
 		
+		#if current != last:
 		if x > self.w / 2:
 			self.x = x - self.w / 2
 		elif x <= self.w / 2:
@@ -228,24 +230,77 @@ class Terrain_Renderer(pygame.Rect):
 				
 				if bottom_i != "0":
 					bottom_t = self.scene.terrain.tileset[bottom_i]
-					self.engine.display.blit(bottom_t, (c,r))
+					self.game.display.blit(bottom_t, (c,r))
 				elif bottom_i == "0":
-					self.engine.display.blit(self.blank, (c,r))
+					self.game.display.blit(self.blank, (c,r))
 
 				if middle_i != "0":
 					middle_t = self.scene.terrain.tileset[middle_i]
-					self.engine.display.blit(middle_t, (c,r))
+					self.game.display.blit(middle_t, (c,r))
 
 		#if self.scene.loot: # TODO merge this with sprites for the y_sort
 		#	for loot in self.scene.loot.values():
-		#		loot.render(self.engine.display, x_offset = -self.x, y_offset = -self.y)
+		#		loot.render(self.game.display, x_offset = -self.x, y_offset = -self.y)
 
 		if self.scene.live_mobs: # draw the sprites
 			#for sprite in self.scene.sprites.values():
 			for sprite in utilities.y_sort(self.scene.live_mobs.values()):
-				render(sprite, self.engine.display, x_offset = -self.x, y_offset = -self.y)
+				render(sprite, self.game.display, x_offset = -self.x, y_offset = -self.y)
 		
 		for row in range(self.rows): # draw the top layer
 			for col in range(self.cols):
 				tile, x, y = self.tile_prep("top", col, row)
-				if tile != "0": self.engine.display.blit(tile, (x, y))
+				if tile != "0": self.game.display.blit(tile, (x, y))
+				
+class Fader: # TODO make a white version
+
+	def __init__(self, game, size):
+	
+		self.game = game
+		self.curtain = pygame.Surface(size)
+		self.curtain.fill((0,0,0))
+		self.opacity = 0
+		self.curtain.set_alpha(self.opacity)
+		
+		self.speed = 0
+		self.velocity = -self.speed
+		self.faded_in = False # as in a cycle
+		self.faded_out = False
+		self.fading = False
+	
+	def fade_out(self, speed=6):
+	
+		self.speed = speed
+		self.opacity = 0
+		self.fading = True
+		self.velocity = self.speed
+		
+	def fade_in(self, speed=6):
+		
+		self.speed = speed
+		self.opacity = 255
+		self.fading = True
+		self.velocity = -self.speed
+				
+	def update(self):
+	
+		if self.faded_in: self.faded_in = False
+		if self.faded_out: self.faded_out = False
+		
+		if self.fading:
+		
+			self.opacity += self.velocity
+			
+			if self.opacity <= 0:
+				self.opacity = 0
+				self.faded_in = True
+				#self.game.messages.append("faded_in")
+			elif self.opacity >= 255:
+				self.opacity = 255
+				self.faded_out = True
+				#self.game.messages.append("faded_out")
+			
+			self.curtain.set_alpha(self.opacity)
+
+			if self.faded_in or self.faded_out:
+				self.fading = False

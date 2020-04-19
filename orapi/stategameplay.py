@@ -14,10 +14,10 @@ class State_Gameplay:
 	
 		self.game = game
 		
-		self.sub_state = "in_game" #None
+		self.sub_state = "in_play" #None
 		self.sub_states = { "fade_in": self.fade_in,
 							"fade_out": self.fade_out,
-							"in_game": self.in_game,
+							"in_play": self.in_play,
 							"in_menu": self.in_menu,
 							"iteming": self.iteming,
 							"in_dialogue": self.in_dialogue,
@@ -25,8 +25,22 @@ class State_Gameplay:
 		
 		self.input_focus = None # self.game.player
 	
-	def fade_in(self): pass
-	def fade_out(self): pass	
+	def fade_in(self):
+	
+		self.game.fader.update()
+		self.game.terrain_renderer.render()
+		self.game.display.blit(self.game.fader.curtain,(0,0))
+		pygame.display.flip()
+		if self.game.fader.faded_in: self.sub_state = "in_play"
+		
+	def fade_out(self):
+	
+		self.game.fader.update()
+		self.game.terrain_renderer.render()
+		self.game.display.blit(self.game.fader.curtain,(0,0))
+		pygame.display.flip()
+		if self.game.fader.faded_out: self.game.running = False
+				
 	def in_menu(self): pass	
 	def iteming(self): pass	
 	def in_dialogue(self): pass	
@@ -37,34 +51,39 @@ class State_Gameplay:
 		self.in_play = False
 		self.ending = False
 		
-		#self.engine.scene_painter.update()	
+		self.game.terrain_renderer.update()	
 				
 		#debug; also needs to be put into Cutscene
 		#self.engine.scene_painter.scene.sprites["2"].image.set_alpha(0)
 		
-		#self.sub_state = "fade_in"		
-		#self.game.fader.fade_in()
+		self.sub_state = "fade_in"		
+		self.game.fader.fade_in()
 		
-	def in_game(self):
+	def in_play(self):
 	
 		#TODO ??? self.input_focus.get_input()
 		
-		#self.scene.update()
 		c = self.game.controller
+		# TODO show where move_mob comes from
 		move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
 		if not self.game.dialogue_box.visible and c.as_button == 1:
 			self.game.dialogue_box.text_list = ["Guten tag"]
 			self.game.dialogue_box.start()
+		if self.game.controller.exit == 1:
+			self.sub_state = "fade_out"
+			self.game.fader.fade_out()
+		
 		self.game.dialogue_box.update()
 		self.game.scene.update()
 		self.game.terrain_renderer.update()
 		
 		self.game.terrain_renderer.render()
+		self.game.display.blit(self.game.fader.curtain,(0,0))
 		self.game.dialogue_box.render()
 		#render(self.game.player, self.game.display)
 		pygame.display.flip()
 		
-	#def in_game(self): # leads to in_menu, in_dialogue, and fade_out
+	#def in_play(self): # leads to in_menu, in_dialogue, and fade_out
 	
 		# TODO define all input control here!
 	
@@ -94,13 +113,13 @@ class GS_Gameplay:
 		self.sub_state = None
 		self.sub_states = { "fade_in": self.fade_in,
 							"fade_out": self.fade_out,
-							"in_game": self.in_game,
+							"in_play": self.in_play,
 							"in_menu": self.in_menu,
 							"iteming": self.iteming,
 							"in_dialogue": self.in_dialogue,
 							"switching": self.switching }
 							
-	def in_game(self): # leads to in_menu, in_dialogue, and fade_out
+	def in_play(self): # leads to in_menu, in_dialogue, and fade_out
 	
 		# TODO define all input control here!
 	
