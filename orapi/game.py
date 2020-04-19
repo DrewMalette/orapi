@@ -3,11 +3,13 @@ import pygame
 from .mob import move_mob, render
 from .scene import Scene
 from .terrain import Terrain
-from .dialogue import UI_Dialogue
+from .uidialogue import UI_Dialogue
+from .uiselect import UI_Select
 from . import utilities
 from .utilities import get_centre
 
 from .statetitlecard import State_Titlecard
+from .statetitle import State_Title
 from .stategameplay import State_Gameplay
 
 class Game:
@@ -23,10 +25,13 @@ class Game:
 		self.fader = Fader(self, self.display.get_size())
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
 		self.dialogue_box = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
+		labels = ["Get Cucked", "Quit to Desktop"]
+		self.title_select = UI_Select("titleselect", self, (245,300), (150,54), labels)
 	
 		self.controller = Keyboard(self)
 		self.state = ""
-		self.states = { "titlecard": State_Titlecard(self), "gameplay": State_Gameplay(self) }
+		self.states = { "titlecard": State_Titlecard(self), "gameplay": State_Gameplay(self),
+						"title": State_Title(self) }
 		
 		#self.ui = None
 		
@@ -99,7 +104,7 @@ class Controller:
 		
 		self.x_axis = self.y_axis = 0
 		self.x_repeat = self.y_repeat = False
-		self.x_pressed = self.y_pressed = False
+		self.x_pressed = self.y_pressed = False # USE THESE!!!
 		self.x_tick = self.y_tick = 0
 		
 		self.as_pressed = False

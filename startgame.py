@@ -8,9 +8,7 @@ def load_func(game):
 
 	game.player = orapi.Mob(game, "data/image/mob_jon.png", "Jon")
 	game.load_scene("scene1", "data/terrain/untitled.tmx")
-	#game.state = orapi.State_Gameplay(game)
-	game.switch_state("titlecard")
-	#game.state.start()
+	game.switch_state("title")
 	
 pygame.init()
 
