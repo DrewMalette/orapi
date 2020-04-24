@@ -35,7 +35,7 @@ class UI_Select(object):
 		self._returned = 0
 	
 		if self.visible:
-			y_axis = self.game.controller.y_pressed
+			y_axis = self.game.controller.y_axis_sr
 			button_a = self.game.controller.as_button
 		
 			if y_axis != 0:			

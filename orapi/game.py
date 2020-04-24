@@ -107,6 +107,10 @@ class Controller:
 		self.x_pressed = self.y_pressed = False # USE THESE!!! Yes but actually no
 		self.x_tick = self.y_tick = 0
 		
+		self.y_axis_sr = 0
+		self.y_axis_phase1 = 0
+		self.y_axis_phase2 = 0
+		
 		self.as_pressed = False
 		self.as_button = 0 # 'A' button single pulse
 		self.ar_button = 0 # 'A' button repeating pulse; haven't coded this in yet
@@ -127,7 +131,8 @@ class Keyboard(Controller):
 		
 		self.x_axis = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT] 
 		self.y_axis = keys[pygame.K_DOWN] - keys[pygame.K_UP]
-		
+		self.y_axis_sr = 0
+				
 		self.as_button = 0
 		self.ar_button = keys[pygame.K_RCTRL]
 		
@@ -138,12 +143,12 @@ class Keyboard(Controller):
 			self.x_pressed = False
 		self.x_repeat = self.x_pressed and (pygame.time.get_ticks() - self.x_tick >= 800)
 
-		if self.y_axis != 0 and not self.y_pressed:
-			self.y_tick = pygame.time.get_ticks()
-			self.y_pressed = True
-		elif self.y_axis == 0 and self.y_pressed:
-			self.y_pressed = False
-		self.y_repeat = self.y_pressed and (pygame.time.get_ticks() - self.y_tick >= 800)
+		#if self.y_axis != 0 and not self.y_pressed:
+		#	self.y_tick = pygame.time.get_ticks()
+		#	self.y_pressed = True
+		##elif self.y_axis == 0 and self.y_pressed:
+		#	self.y_pressed = False
+		#self.y_repeat = self.y_pressed and (pygame.time.get_ticks() - self.y_tick >= 800)
 
 		if keys[pygame.K_RCTRL] == 1 and not self.as_pressed:
 			self.as_pressed = True
@@ -153,6 +158,26 @@ class Keyboard(Controller):
 
 		if keys[pygame.K_ESCAPE] == 1:
 			self.exit = 1
+
+		if self.y_axis != 0 and not self.y_pressed:
+			self.y_pressed = True
+			self.y_tick = pygame.time.get_ticks()
+			self.y_axis_sr = 1 # special repeat
+			self.y_axis_phase1 = 1
+		
+		if self.y_pressed:
+			if self.y_axis_phase1:
+				if pygame.time.get_ticks() - self.y_tick >= 800:
+					self.y_axis_phase2 = 1
+					self.y_axis_phase1 = 0
+					self.y_tick = pygame.time.get_ticks()
+			elif self.y_axis_phase2:
+				if pygame.time.get_ticks() - self.y_tick >= 100:
+					self.y_axis_sr = 1
+					self.y_tick = pygame.time.get_ticks()
+				
+		if self.y_axis == 0 and self.y_pressed:
+			self.y_pressed = False
 
 		#print(self.x_repeat, self.y_repeat)
 
