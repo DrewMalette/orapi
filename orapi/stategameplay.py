@@ -25,25 +25,6 @@ class State_Gameplay:
 		
 		self.input_focus = None # self.game.player
 	
-	def fade_in(self):
-	
-		self.game.fader.update()
-		self.game.terrain_renderer.render()
-		self.game.display.blit(self.game.fader.curtain,(0,0))
-		if self.game.fader.faded_in: self.sub_state = "in_play"
-		
-	def fade_out(self):
-	
-		self.game.fader.update()
-		self.game.terrain_renderer.render()
-		self.game.display.blit(self.game.fader.curtain,(0,0))
-		if self.game.fader.faded_out: self.game.switch_state("title")
-				
-	def in_menu(self): pass	
-	def iteming(self): pass	
-	def in_dialogue(self): pass	
-	def switching(self): pass	
-
 	def start(self):
 		
 		self.in_play = False
@@ -56,7 +37,28 @@ class State_Gameplay:
 		
 		self.sub_state = "fade_in"		
 		self.game.fader.fade_in()
+	
+	def fade_in(self):
+	
+		self.game.fader.update()
+		self.game.terrain_renderer.render()
+		self.game.display.blit(self.game.fader.curtain,(0,0))
+		if self.game.fader.faded_in: self.sub_state = "in_play"
 		
+	def fade_out(self):
+	
+		self.game.fader.update()
+		self.game.terrain_renderer.render()
+		self.game.display.blit(self.game.fader.curtain,(0,0))
+		if self.game.fader.faded_out:
+			self.game.title_music.fadeout(800)
+			self.game.switch_state("title")
+
+	def in_menu(self): pass	
+	def iteming(self): pass	
+	def in_dialogue(self): pass	
+	def switching(self): pass	
+
 	def in_play(self):
 	
 		#TODO ??? self.input_focus.get_input()

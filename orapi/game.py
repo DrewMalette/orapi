@@ -44,6 +44,7 @@ class Game:
 		self.ui_font = pygame.font.Font(None, 24)
 				
 		# do some loading shit here
+		self.title_music = pygame.mixer.Sound("data/sound/ccsong.ogg")
 		load_func(self)
 
 	def switch_state(self, state_uid): # load and start
