@@ -18,7 +18,7 @@ class State_Gameplay:
 		self.sub_states = { "fade_in": self.fade_in,
 							"fade_out": self.fade_out,
 							"in_play": self.in_play,
-							"in_menu": self.in_menu,
+							"menu": self.menu,
 							"iteming": self.iteming,
 							"in_dialogue": self.in_dialogue,
 							"switching": self.switching }
@@ -38,14 +38,14 @@ class State_Gameplay:
 		self.sub_state = "fade_in"		
 		self.game.fader.fade_in()
 	
-	def fade_in(self):
+	def fade_in(self): # enter?
 	
 		self.game.fader.update()
 		self.game.terrain_renderer.render()
 		self.game.display.blit(self.game.fader.curtain,(0,0))
 		if self.game.fader.faded_in: self.sub_state = "in_play"
 		
-	def fade_out(self):
+	def fade_out(self): # exit?
 	
 		self.game.fader.update()
 		self.game.terrain_renderer.render()
@@ -54,9 +54,9 @@ class State_Gameplay:
 			self.game.title_music.fadeout(800)
 			self.game.switch_state("title")
 
-	def in_menu(self): pass	
-	def iteming(self): pass	
-	def in_dialogue(self): pass	
+	def menu(self): pass	
+	def iteming(self): pass # WTF???	
+	def in_dialogue(self): pass
 	def switching(self): pass	
 
 	def in_play(self):
@@ -64,22 +64,20 @@ class State_Gameplay:
 		#TODO ??? self.input_focus.get_input()
 		
 		c = self.game.controller
+		
 		# TODO show where move_mob comes from
 		move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
-		if not self.game.dialogue_box.visible and c.as_button == 1:
-			self.game.dialogue_box.text_list = ["Guten tag"]
-			self.game.dialogue_box.start()
 		if self.game.controller.exit == 1:
 			self.sub_state = "fade_out"
 			self.game.fader.fade_out()
 		
-		self.game.dialogue_box.update()
+		self.game.ui["dialoguebox"].update()
 		self.game.scene.update()
 		self.game.terrain_renderer.update()
 		
 		self.game.terrain_renderer.render()
-		self.game.display.blit(self.game.fader.curtain,(0,0))
-		self.game.dialogue_box.render()
+		#self.game.display.blit(self.game.fader.curtain,(0,0))
+		self.game.ui["dialoguebox"].render()
 		#render(self.game.player, self.game.display)
 		
 	#def in_play(self): # leads to in_menu, in_dialogue, and fade_out

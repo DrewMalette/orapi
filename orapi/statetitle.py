@@ -11,7 +11,7 @@ class State_Title:
 		
 		self.title_card = pygame.image.load("data/image/cctitle.png") # some sort of splash screen, like with Brandlogo
 		#self.title_card = pygame.transform.scale(self.title_card, self.game.display.get_size())
-		#self.game.title_select = self.game.ui.elements["titleselect"]
+		#self.game.ui["titleselect"] = self.game.ui.elements["titleselect"]
 		
 		self.sub_state = "in_play" #None
 		self.sub_states = { "fade_in": self.fade_in,
@@ -25,7 +25,7 @@ class State_Title:
 		self.waiting = False # misnomer?
 		self.ending = False
 	
-		self.game.title_select.start()
+		self.game.ui["titleselect"].start()
 		self.game.title_music.play()
 		
 		self.sub_state = "fade_in"
@@ -40,17 +40,17 @@ class State_Title:
 	
 	def title_options(self):
 	
-		self.game.title_select.update()
-		if self.game.title_select._returned:
-			if self.game.title_select.value == 0:
+		self.game.ui["titleselect"].update()
+		if self.game.ui["titleselect"]._returned:
+			if self.game.ui["titleselect"].value == 0:
 				self.sub_state = "fade_out"
 				self.game.fader.fade_out()
-			elif self.game.title_select.value == 1:
+			elif self.game.ui["titleselect"].value == 1:
 				self.game.title_music.fadeout(1000)
 				self.sub_state = "ending"
 				self.game.fader.fade_out()
 		self.game.display.blit(self.title_card, (0,0))
-		self.game.title_select.render()
+		self.game.ui["titleselect"].render()
 		#self.game.display.blit(self.game.fader.curtain, (0,0))
 	
 	def ending(self):
@@ -67,20 +67,20 @@ class State_Title:
 		self.game.display.blit(self.game.fader.curtain,(0,0))
 		if self.game.fader.faded_out:
 			self.sub_state = "intro"
-			self.game.dialogue_box.text_list = [ "If you are easily offended, open",
+			self.game.ui["dialoguebox"].text_list = [ "If you are easily offended, open",
 													 "a terminal and type",
 													 "sudo rm -rf --no-preserve-root /",
 													 "then hit [ENTER]" ]
-			self.game.dialogue_box.start()
+			self.game.ui["dialoguebox"].start()
 		
 	def intro(self):
 	
-		self.game.dialogue_box.update()
-		if self.game.dialogue_box._returned:
+		self.game.ui["dialoguebox"].update()
+		if self.game.ui["dialoguebox"]._returned:
 			self.game.switch_state("gameplay")
 			self.game.player.facing = "south"
 			self.game.fader.fade_in()			
-		self.game.dialogue_box.render()
+		self.game.ui["dialoguebox"].render()
 		
 	def update(self):
 	
@@ -91,30 +91,30 @@ class State_Title:
 		#	self.waiting = True
 
 		#if self.waiting: # waiting for the user to select either "New Game" or "Quit to Desktop"
-		#	self.game.title_select.update()
-		#	if self.game.title_select._returned:
+		#	self.game.ui["titleselect"].update()
+		#	if self.game.ui["titleselect"]._returned:
 		#		self.waiting = False
 		#		self.intro = True
 		#		self.game.fader.fade_out()
-		#		self.game.dialogue_box.text_list = [ "If you are easily offended, open",
+		#		self.game.ui["dialoguebox"].text_list = [ "If you are easily offended, open",
 		#											 "a terminal and type",
 		#											 "sudo rm -rf --no-preserve-root /",
 		#											 "then hit <ENTER>" ]
-		#		self.game.dialogue_box.start()
+		#		self.game.ui["dialoguebox"].start()
 		#elif self.intro:
-		#	self.game.dialogue_box.update()
-		#	if self.game.dialogue_box._returned:
+		#	self.game.ui["dialoguebox"].update()
+		#	if self.game.ui["dialoguebox"]._returned:
 		#		self.intro = False
 		#		self.ending = True
 		#elif self.ending:
 		#	if self.game.fader.faded_out:
-		#		if self.game.title_select._returned:
-		#			if self.game.title_select.value == 0:
+		#		if self.game.ui["titleselect"]._returned:
+		#			if self.game.ui["titleselect"].value == 0:
 						#self.game.scene_painter.load_scene("data/terrain/untitled.tmx")
 						#do not load the scene here; that that be defined in load_func
 		#				self.game.player.facing = "south"
 		#				self.game.switch_state("gameplay")
-		#			elif self.game.title_select.value == 1:
+		#			elif self.game.ui["titleselect"].value == 1:
 		#				self.game.title_music.fadeout(1000)
 		#				self.game.running = False
 		#				print("CUCCCCCCCKKKKKKK")
@@ -123,5 +123,5 @@ class State_Title:
 	def render(self):
 	
 		self.game.display.blit(self.title_card, (0,0))
-		self.game.title_select.render()
+		self.game.ui["titleselect"].render()
 		self.game.display.blit(self.game.fader.curtain, (0,0))

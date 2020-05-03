@@ -24,16 +24,16 @@ class Game:
 		self.display = pygame.display.set_mode(self.display_size)
 		self.fader = Fader(self, self.display.get_size())
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
-		self.dialogue_box = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
+		
+		self.ui = {}
+		self.ui["dialoguebox"] = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
 		labels = ["Get Cucked", "Quit to Desktop"]
-		self.title_select = UI_Select("titleselect", self, (245,300), (150,54), labels)
+		self.ui["titleselect"] = UI_Select("titleselect", self, (245,300), (150,54), labels)
 	
 		self.controller = Keyboard(self)
 		self.state = ""
 		self.states = { "titlecard": State_Titlecard(self), "gameplay": State_Gameplay(self),
 						"title": State_Title(self) }
-		
-		#self.ui = None
 		
 		self.clock = pygame.time.Clock()
 		self.tick = 0
@@ -85,7 +85,7 @@ class Game:
 	def update(self):
 	
 		self.clock.tick(self.fps)
-		self.tick = (self.tick + 1) % 1024
+		self.tick = (self.tick + 1) % 4294967296
 		pygame.event.pump()
 		self.controller.update(pygame.key.get_pressed())
 		self.states[self.state].update()
@@ -214,7 +214,7 @@ class Terrain_Renderer(pygame.Rect):
 		y = row * self.tilesize - y_offset
 		
 		if index != "0":
-			tile = self.scene.tileset[index]
+			tile = self.scene.terrain.tileset[index]
 			return (tile, x, y)
 		else:			
 			return ("0", x, y)
