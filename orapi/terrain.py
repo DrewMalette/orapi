@@ -133,18 +133,3 @@ class Terrain:
 		py = y - 20
 		self.loot[self.loot_count] = sprite.Loot(self, uid, filename, (px,py))
 		self.loot_count = (self.loot_count + 1) % 256
-		
-	#def update(self):
-	#
-	#	for sprite in self.sprites.values():
-	#		sprite.update()
-	#		
-	#	for loot in self.loot.values():
-	#		loot.update()
-	#	
-	#	# TODO put this in player
-	#	for switch in self.switches.values():
-	#		rect = switch[0]
-	#		filename = switch[1]
-	#		if self.engine.player_character.colliderect(rect):
-	#			self.engine.active_state.switch_scene("content/image/"+filename, switch[2], switch[3])

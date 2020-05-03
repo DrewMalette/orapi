@@ -12,17 +12,6 @@ class State_Titlecard:
 		
 		self.image = pygame.image.load("data/image/cctitle.png")
 		
-		#splashfont = pygame.font.Font(None, 24)
-		#spacing = 3
-		#urban = splashfont.render("Drew", 0, (0,0,0))
-		#bonfire = splashfont.render("M", 0, (0xff,0,0))
-		#x = (self.game.display.get_width() - (urban.get_width() + bonfire.get_width() + spacing)) / 2
-		#y = (self.game.display.get_height() - urban.get_height()) / 2
-		#self.image = pygame.Surface(self.game.display.get_size()).convert()
-		#self.image.fill((0xff,0xff,0xff))
-		#self.image.blit(urban, (x,y))
-		#self.image.blit(bonfire, (x + urban.get_width() + spacing, y))
-		
 	def start(self):
 		
 		self.waiting = False
