@@ -63,21 +63,23 @@ class State_Gameplay:
 	
 		#TODO ??? self.input_focus.get_input()
 		
-		c = self.game.controller
+		self.game.scene.update()
+		
+		#c = self.game.controller
 		
 		# TODO show where move_mob comes from
-		move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
-		if self.game.controller.exit == 1:
-			self.sub_state = "fade_out"
-			self.game.fader.fade_out()
+		#move_mob(self.game.player, 1 * c.x_axis, 1 * c.y_axis)
+		#if self.game.controller.exit == 1:
+		#	self.sub_state = "fade_out"
+		#	self.game.fader.fade_out()
 		
-		self.game.ui["dialoguebox"].update()
-		self.game.scene.update()
-		self.game.terrain_renderer.update()
+		#self.game.ui["dialoguebox"].update()
+		#self.game.scene.update()
+		#self.game.terrain_renderer.update()
 		
-		self.game.terrain_renderer.render()
+		#self.game.terrain_renderer.render()
 		#self.game.display.blit(self.game.fader.curtain,(0,0))
-		self.game.ui["dialoguebox"].render()
+		#self.game.ui["dialoguebox"].render()
 		#render(self.game.player, self.game.display)
 		
 	#def in_play(self): # leads to in_menu, in_dialogue, and fade_out

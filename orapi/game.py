@@ -137,6 +137,8 @@ class Keyboard(Controller):
 		self.as_button = 0
 		self.ar_button = keys[pygame.K_RCTRL]
 		
+		self.exit = 0
+		
 		if self.x_axis != 0 and not self.x_pressed:
 			self.x_tick = pygame.time.get_ticks()
 			self.x_pressed = True
