@@ -86,6 +86,7 @@ class Game:
 	
 		self.clock.tick(self.fps)
 		self.tick = (self.tick + 1) % 4294967296
+		#print(self.tick)
 		pygame.event.pump()
 		self.controller.update(pygame.key.get_pressed())
 		self.states[self.state].update()

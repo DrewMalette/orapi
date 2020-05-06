@@ -8,38 +8,6 @@
 # then they need uids again
 
 from .mob import *
-
-class Scene:
-
-	def __init__(self, uid, game, terrain=None):
-	
-		self.uid = uid
-		self.game = game
-		self.terrain = terrain
-		
-		self.par_state = self.game.states["gameplay"]
-		
-		self.mobs = {}
-		self.live_mobs = {}
-		
-		self.buildings = {}
-		self.furniture = {}
-		self.loot = {}
-		
-		#self.segment = ""
-		#self.segments = {}
-		self.segment = "Wait4Za"
-		self.segments = {"ExpoDump": scene1_expo_dump, "Wait4Za": wait_for_pizza }
-
-	def add_mob(self, mob):
-	
-		self.mobs[mob.name] = mob
-		
-	def update(self):
-	
-		self.segments[self.segment](self)
-	
-		for mob in self.live_mobs.values():	base_update(mob)
 			
 # scene segments are functions and always pass scene as an argument
 def scene1_expo_dump(scene): # "ExpoDump"
@@ -66,4 +34,39 @@ def wait_for_pizza(scene):
 	
 	scene.game.terrain_renderer.render()
 	scene.game.ui["dialoguebox"].render()
+
+_locals = locals()
+
+class Scene:
+
+	def __init__(self, uid, game, terrain=None):
 	
+		self.uid = uid
+		self.game = game
+		self.terrain = terrain
+		
+		self.par_state = self.game.states["gameplay"]
+		
+		self.mobs = {}
+		self.live_mobs = {}
+		
+		self.buildings = {}
+		self.furniture = {}
+		self.loot = {}
+		
+		#self.segment = ""
+		#self.segments = {}
+		self.segment = "wait_for_pizza"
+		#self.segments = {"ExpoDump": scene1_expo_dump, "Wait4Za": wait_for_pizza }
+
+	def add_mob(self, mob):
+	
+		self.mobs[mob.name] = mob
+		
+	def update(self):
+		
+		_locals[self.segment](self)
+	
+		for mob in self.live_mobs.values():	base_update(mob)
+
+#print(locals())

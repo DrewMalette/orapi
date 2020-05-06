@@ -71,11 +71,11 @@ class State_Title:
 													 "then hit [ENTER]" ]
 			self.game.ui["dialoguebox"].start()
 		
-	def intro(self):
+	def intro(self): # gameplay entry point; "New Game"
 	
 		self.game.ui["dialoguebox"].update()
 		if self.game.ui["dialoguebox"]._returned:
-			self.game.load_scene("scene1", "data/terrain/cclivrm.tmx")
+			self.game.load_scene("scene1", "data/terrain/cclivrm.tmx") 
 			self.game.switch_state("gameplay")
 			self.game.player.facing = "south"
 			self.game.fader.fade_in()			
