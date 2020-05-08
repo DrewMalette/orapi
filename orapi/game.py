@@ -52,15 +52,16 @@ class Game:
 		self.state = state_uid
 		self.states[self.state].start()
 
-	def load_scene(self, uid, filename): # scene?
+	def load_scene(self, uid, script_locals, terrain_filename, segment):
+		#def __init__(self, uid, game, script_locals, terrain=None, segment=None):
+		#game.load_scene("scene1", userscripts.scene1._locals, "data/terrain/cclivrm.tmx", "wait_for_pizza") 
 	
 		#if self.scene != None:
 		#	del self.scene
-		self.scene = Scene(uid, self)
-		terrain = Terrain(filename, self)
+		self.scene = Scene(uid, self, script_locals, segment)
+		Terrain(terrain_filename, self, self.scene) # automatically sets self.scene.terrain to instance
 		self.terrain_renderer.scene = self.scene
 		self.terrain_renderer.following = self.player
-
 		# assumes the tile is square
 		self.terrain_renderer.tilesize = self.scene.terrain.tilewidth
 		self.terrain_renderer.cols = int(self.terrain_renderer.w / self.scene.terrain.tilesize + 2)
@@ -109,9 +110,9 @@ class Controller:
 		self.x_pressed = self.y_pressed = False # USE THESE!!! Yes but actually no
 		self.x_tick = self.y_tick = 0
 		
-		self.y_axis_sr = 0
-		self.y_axis_phase1 = 0
-		self.y_axis_phase2 = 0
+		self.y_axis_sr = 0 # special repeat; delayed repeat
+		self.y_axis_phase1 = 0 # for the first, and longer, delay
+		self.y_axis_phase2 = 0 # for the constant and shorter delay
 		
 		self.as_pressed = False
 		self.as_button = 0 # 'A' button single pulse

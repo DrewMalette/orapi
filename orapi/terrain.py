@@ -28,10 +28,10 @@ class Tileset:
 			
 class Terrain:
 
-	def __init__(self, filename, engine):
+	def __init__(self, filename, engine, scene):
 
 		self.uid = filename
-		self.scene = engine.scene
+		self.scene = scene
 		self.scene.terrain = self
 		
 		tree = ET.parse(self.uid)

@@ -7,43 +7,14 @@
 # create a Dialogue box then access it?
 # then they need uids again
 
-from .mob import *
+from .mob import * # why do i need this?
 			
-# scene segments are functions and always pass scene as an argument
-def scene1_expo_dump(scene): # "ExpoDump"
-
-	#if scene.game.ui["dialoguebox"]._returned: scene.segment = "Wait4Za"
-	# start pizza guy timer
-	#scene.segment = "Wait4Za"
-	
-	c = scene.game.controller			
-	if c.exit == 1:	scene.par_state.sub_state = "fade_out"; scene.game.fader.fade_out()
-		
-	scene.game.ui["dialoguebox"].update()
-		
-	scene.game.terrain_renderer.render()
-	scene.game.ui["dialoguebox"].render()
-		
-def wait_for_pizza(scene):
-
-	c = scene.game.controller		
-	move_mob(scene.game.player, 1 * c.x_axis, 1 * c.y_axis) # TODO show where move_mob comes from
-	if c.exit == 1:	scene.par_state.sub_state = "fade_out"; scene.game.fader.fade_out()
-	
-	scene.game.terrain_renderer.update()	
-	
-	scene.game.terrain_renderer.render()
-	scene.game.ui["dialoguebox"].render()
-
-_locals = locals()
-
 class Scene:
 
-	def __init__(self, uid, game, terrain=None):
+	def __init__(self, uid, game, script_locals, segment):
 	
 		self.uid = uid
 		self.game = game
-		self.terrain = terrain
 		
 		self.par_state = self.game.states["gameplay"]
 		
@@ -54,10 +25,15 @@ class Scene:
 		self.furniture = {}
 		self.loot = {}
 		
+		self.script_locals = {}
+		self.script_locals.update(script_locals)
+		
 		#self.segment = ""
 		#self.segments = {}
-		self.segment = "wait_for_pizza"
+		self.segment = segment
 		#self.segments = {"ExpoDump": scene1_expo_dump, "Wait4Za": wait_for_pizza }
+
+		self.terrain = None
 
 	def add_mob(self, mob):
 	
@@ -65,7 +41,7 @@ class Scene:
 		
 	def update(self):
 		
-		_locals[self.segment](self)
+		self.script_locals[self.segment](self)
 	
 		for mob in self.live_mobs.values():	base_update(mob)
 
