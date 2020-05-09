@@ -1,16 +1,14 @@
 import pygame
 
-from .mob import move_mob, render
-from .scene import Scene
-from .terrain import Terrain
-from .uidialogue import UI_Dialogue
-from .uiselect import UI_Select
+from . import mob
+from . import scene
+from . import terrain
+from . import uidialogue
+from . import uiselect
 from . import utilities
-from .utilities import get_centre
 
-from .statetitlecard import State_Titlecard
-from .statetitle import State_Title
-from .stategameplay import State_Gameplay
+from . import statetitle
+from . import stategameplay
 
 class Game:
 
@@ -27,14 +25,13 @@ class Game:
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
 		
 		self.ui = {}
-		self.ui["dialoguebox"] = UI_Dialogue("dialoguebox", self, (170,360), (300,100))
+		self.ui["dialoguebox"] = uidialogue.UI_Dialogue("dialoguebox", self, (170,360), (300,100))
 		labels = ["Get Cucked", "Quit to Desktop"]
-		self.ui["titleselect"] = UI_Select("titleselect", self, (245,300), (150,54), labels)
+		self.ui["titleselect"] = uiselect.UI_Select("titleselect", self, (245,300), (150,54), labels)
 	
 		self.controller = Keyboard(self)
 		self.state = ""
-		self.states = { "titlecard": State_Titlecard(self), "gameplay": State_Gameplay(self),
-						"title": State_Title(self) }
+		self.states = { "gameplay": stategameplay.State_Gameplay(self), "title": statetitle.State_Title(self) }
 		
 		self.clock = pygame.time.Clock()
 		self.tick = 0
@@ -54,13 +51,9 @@ class Game:
 		self.states[self.state].start()
 
 	def load_scene(self, uid, script_locals, terrain_filename, segment):
-		#def __init__(self, uid, game, script_locals, terrain=None, segment=None):
-		#game.load_scene("scene1", userscripts.scene1._locals, "data/terrain/cclivrm.tmx", "wait_for_pizza") 
-	
-		#if self.scene != None:
-		#	del self.scene
-		self.scene = Scene(uid, self, script_locals, segment)
-		Terrain(terrain_filename, self, self.scene) # automatically sets self.scene.terrain to instance
+		
+		self.scene = scene.Scene(uid, self, script_locals, segment)
+		terrain.Terrain(terrain_filename, self, self.scene) # automatically sets self.scene.terrain to instance
 		self.terrain_renderer.scene = self.scene
 		self.terrain_renderer.following = self.player
 		# assumes the tile is square
@@ -88,7 +81,6 @@ class Game:
 	
 		self.clock.tick(self.fps)
 		self.tick = (self.tick + 1) % 4294967296
-		#print(self.tick)
 		pygame.event.pump()
 		self.controller.update(pygame.key.get_pressed())
 		self.states[self.state].update()
@@ -185,10 +177,6 @@ class Keyboard(Controller):
 		if self.y_axis == 0 and self.y_pressed:
 			self.y_pressed = False
 
-		#print(self.x_repeat, self.y_repeat)
-
-		#self.game.running = (not keys[pygame.K_ESCAPE])
-		
 class Terrain_Renderer(pygame.Rect):
 
 	def __init__(self, uid, game, x=0, y=0):
@@ -226,11 +214,8 @@ class Terrain_Renderer(pygame.Rect):
 			
 	def update(self):
 	
-		#self.scene.update()
-	
-		x,y = get_centre(self.following)
+		x,y = mob.get_centre(self.following)
 		
-		#if current != last:
 		if x > self.w / 2:
 			self.x = x - self.w / 2
 		elif x <= self.w / 2:
@@ -284,7 +269,7 @@ class Terrain_Renderer(pygame.Rect):
 		if self.scene.live_mobs: # draw the sprites
 			#for sprite in self.scene.sprites.values():
 			for sprite in utilities.y_sort(self.scene.live_mobs.values()):
-				render(sprite, self.game.display, x_offset = -self.x, y_offset = -self.y)
+				mob.render(sprite, self.game.display, x_offset = -self.x, y_offset = -self.y)
 		
 		for row in range(self.rows): # draw the top layer
 			for col in range(self.cols):
@@ -333,13 +318,12 @@ class Fader: # TODO make a white version
 			if self.opacity <= 0:
 				self.opacity = 0
 				self.faded_in = True
-				#self.game.messages.append("faded_in")
 			elif self.opacity >= 255:
 				self.opacity = 255
 				self.faded_out = True
-				#self.game.messages.append("faded_out")
 			
 			self.curtain.set_alpha(self.opacity)
 
 			if self.faded_in or self.faded_out:
 				self.fading = False
+

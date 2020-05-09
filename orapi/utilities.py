@@ -2,7 +2,6 @@ import operator
 
 import pygame
 
-get_centre = lambda mob: ((mob.x + (mob.w / 2)), (mob.y + (mob.h / 2)))
 y_sort = lambda mob_list: sorted(mob_list, key=operator.attrgetter('y'))
 
 def place(mob, col, row, terrain):

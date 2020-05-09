@@ -1,7 +1,9 @@
 
 import pygame
-from .mechanics import StatBlock
-from .utilities import load_mob_sprite
+#from .mechanics import StatBlock
+from . import utilities #import load_mob_sprite
+
+get_centre = lambda mob: ((mob.x + (mob.w / 2)), (mob.y + (mob.h / 2)))
 
 heading = { (0,-1): "north", (0,1): "south", (-1,0): "west", (1,0): "east",
 			(-1,-1): "north", (1,1): "south", (-1,1): "west", (1,-1): "east" }
@@ -30,7 +32,7 @@ class Mob(pygame.Rect): # incarnation of the 'Sprite' concept
 		#self.animations = self.data["animations"]
 		#self.off_x = self.data["off_x"]
 		#self.off_y = self.data["off_y"]
-		data = load_mob_sprite(filename)
+		data = utilities.load_mob_sprite(filename)
 		pygame.Rect.__init__(self, data["rect"])
 		self.cols = data["cols"]
 		self.rows = data["rows"]
@@ -50,7 +52,7 @@ class Mob(pygame.Rect): # incarnation of the 'Sprite' concept
 		
 		self.talk_rect = pygame.Rect(0,0,12,12)
 		
-		self.statblock = StatBlock(4,3,2)
+		#self.statblock = StatBlock(4,3,2)
 		
 		#
 		#self.targeting = False # aiming?
