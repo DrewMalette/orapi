@@ -25,6 +25,7 @@ class State_Title:
 	
 		self.game.ui["titleselect"].start()
 		self.game.title_music.play()
+		# TODO put music into dictionary; self.music = self.game.music["track1"]
 		
 		self.sub_state = "fade_in"
 		self.game.fader.fade_in()

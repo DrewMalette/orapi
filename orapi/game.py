@@ -26,8 +26,7 @@ class Game:
 		
 		self.ui = {}
 		self.ui["dialoguebox"] = uidialogue.UI_Dialogue("dialoguebox", self, (170,360), (300,100))
-		labels = ["Get Cucked", "Quit to Desktop"]
-		self.ui["titleselect"] = uiselect.UI_Select("titleselect", self, (245,300), (150,54), labels)
+		self.ui["titleselect"] = uiselect.UI_Select("titleselect", self, (245,300), (150,54), ["Get Cucked", "Quit to Desktop"])
 	
 		self.controller = Keyboard(self)
 		self.state = ""
