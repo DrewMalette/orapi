@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 
 import pygame
 
-from .mob import Mob
+from . import mob
 from . import utilities
 
 class Tileset:
@@ -16,7 +16,7 @@ class Tileset:
 		
 	def update(self, filename, firstgid=1):
 	
-		textures = utilities.load_tileset("data/terrain/"+filename, self.width, self.height, firstgid)
+		textures = utilities.load_tileset("content/terrain/"+filename, self.width, self.height, firstgid)
 		self.textures.update(textures)
 				
 	def __getitem__(self, key=-1):
@@ -59,7 +59,7 @@ class Terrain:
 		
 		for tilesettag in root.iter("tileset"):
 			filename = tilesettag.attrib["source"]
-			tilestree = ET.parse("data/terrain/"+filename)
+			tilestree = ET.parse("content/terrain/"+filename)
 			tilesroot = tilestree.getroot()
 			for tileset in tilesroot.iter("tileset"):
 				for i in tileset.iter("image"):
@@ -111,7 +111,7 @@ class Terrain:
 						#print("defaulting to map defined placement position")
 						self.switches[uid] = [pygame.Rect((x,y,self.tilewidth,self.tileheight)), rectattribs["Filename"], None, facing]
 				elif rectattribs["type"] == "mob":
-					self.scene.live_mobs[uid] = Mob("content/image/" + rectattribs["Filename"], rectattribs["name"])
+					self.scene.live_mobs[uid] = mob.Mob("content/image/" + rectattribs["Filename"], rectattribs["name"])
 					self.scene.live_mobs[uid].scene = self.scene
 					utilities.place(self.scene.live_mobs[uid], col, row, self)
 				#elif rectattribs["type"] == "static":
