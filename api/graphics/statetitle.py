@@ -1,7 +1,9 @@
 import pygame
 
-# windows C:\Windows\System32
-# linux sudo rm -rf --no-preserve-root /
+# today's goals
+# - rework the naming conventions in this file
+# - rework so that the states are defined in the entrypoint script
+# - reorganize the whole thing
 
 class State_Title:
 
@@ -9,7 +11,7 @@ class State_Title:
 		
 		self.game = game
 		
-		self.title_card = pygame.image.load("data/image/cctitle.png") # some sort of splash screen, like with Brandlogo
+		self.title_card = pygame.image.load("content/image/cctitle.png") # some sort of splash screen, like with Brandlogo
 				
 		self.sub_state = "in_play" #None
 		self.sub_states = { "fade_in": self.fade_in,
