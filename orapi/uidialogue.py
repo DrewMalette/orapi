@@ -12,7 +12,7 @@ class UI_Dialogue(object):
 		self.w, self.h = size
 		self.visible = False
 		self.waiting_for = None
-		self.eot = False
+		self.eot = False # end of text_list
 		self.text_list = []
 		self._returned = False
 		
@@ -57,7 +57,6 @@ class UI_Dialogue(object):
 		
 	def stop(self):
 	
-		print("stopping dialogue")
 		self.visible = False
 		self._returned = True
 		self.game.controller.flush()
