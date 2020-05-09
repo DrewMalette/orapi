@@ -17,10 +17,11 @@ class Game:
 	fps = 60
 	display_size = (640,480)
 
-	def __init__(self, version, load_func):
+	def __init__(self, version):
 	
 		self.version = version
 	
+		pygame.display.set_caption("open rhombus engine")
 		self.display = pygame.display.set_mode(self.display_size)
 		self.fader = Fader(self, self.display.get_size())
 		self.terrain_renderer = Terrain_Renderer("terrend", self)
@@ -45,7 +46,7 @@ class Game:
 				
 		# do some loading shit here
 		self.title_music = pygame.mixer.Sound("data/sound/ccsong.ogg")
-		load_func(self)
+		#load_func(self)
 
 	def switch_state(self, state_uid): # load and start
 	
