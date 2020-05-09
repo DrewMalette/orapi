@@ -1,12 +1,7 @@
 # entrypoint.py
 
-import sys
-sys.path.append("../")
-import orapi
-
 import pygame
-
-# in the future, the ui components will be defined here (here?)
+import orapi
 
 def exposition(scene):
 	
@@ -36,7 +31,7 @@ def run():
 	pygame.init()
 
 	game = orapi.Game("0.2")
-	# you sure you don't mean here?
+	# TODO define ui components here
 	game.player = orapi.Mob(game, "data/image/mob_jon.png", "Jon")
 	game.load_scene("scene1", _locals, "data/terrain/cclivrm.tmx", "wait_for_pizza") # TODO does not reset
 	game.switch_state("title")
